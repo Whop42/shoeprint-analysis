@@ -59,4 +59,4 @@ flex_mod.angle = flex_rads
 #                         0)       # z rotation
 
 #export
-bpy.ops.export_scene.obj(filepath=filepath + str(math.ceil(math.degrees(flex_rads) - 1)) + ".obj", )
+bpy.ops.export_scene.obj(filepath=filepath + str(math.ceil(math.degrees(flex_rads) - 1)) + ".obj", use_materials=False)
