@@ -1,1 +1,9 @@
 .vscode
+*.obj
+*.glb
+*.mtl
+!empty.obj
+*.csv
+!empty.csv
+paraview/
+paraview.pvd

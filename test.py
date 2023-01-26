@@ -1,15 +1,37 @@
 import pychrono.core as chrono
 import pychrono.irrlicht as chronoirr
 import pychrono.vehicle as veh
-from PIL import Image
-import numpy as np
-
-
+# from PIL import Image
+# import numpy as np
 import os, sys
 import math
 
+###########################
+###########################
+### CHANGE THESE VALUES ###
+
+# name of file in /data/objs/
+filename = "1.obj"
+
+# change this value until the mesh fits (after rotation)
+mesh_scale = 0.4
+
+# change this until the mesh is rotated properly (it's in radians)
+mesh_rotation = math.pi/3.5
+
+# the frame at which to end (don't give it time to jiggle around)
+frame_stop = 110 # set this so it stops once the print solidly hits the terrain
+
+# the degrees to rotate over flipping the print
+# (for if you want it to not land in the middle of the print)
+flip_extra = 0*math.pi
+
+###########################
+###########################
+###########################
+
 base_path = "data"
-filename = input(f"filename (in /{base_path}/objs/): ")
+# filename = input(f"filename (in /{base_path}/objs/): ")
 file_path = os.path.join(base_path, "objs", filename)
 
 csv_path = os.path.join(base_path, "csvs", filename.replace(".obj", ".csv"))
@@ -44,8 +66,9 @@ body.SetPos(tire_center + chrono.ChVectorD(0, 0.2, 0))
 # Load mesh
 mesh = chrono.ChTriangleMeshConnected()
 mesh.LoadWavefrontMesh(file_path)
-mesh.Transform(chrono.ChVectorD(0,0,0), chrono.ChMatrix33D(0.2)) #scale
-mesh.Transform(chrono.ChVectorD(0,0,0), chrono.ChMatrix33D(-(math.pi), chrono.ChVectorD(1, 0, 0))) # rotate
+mesh.Transform(chrono.ChVectorD(0,0,0), chrono.ChMatrix33D(mesh_scale)) # scale
+mesh.Transform(chrono.ChVectorD(0,0,0), chrono.ChMatrix33D(-(math.pi) + flip_extra, chrono.ChVectorD(1, 0, 0))) # flip
+mesh.Transform(chrono.ChVectorD(0,0,0), chrono.ChMatrix33D(mesh_rotation, chrono.ChVectorD(0, 1, 0)))
 
 # Set visualization assets
 vis_shape = chrono.ChTriangleMeshShape()
@@ -108,7 +131,7 @@ terrain.SetPlotType(veh.SCMDeformableTerrain.PLOT_PRESSURE_YELD, 0, 10000.2)
 
 vis = chronoirr.ChVisualSystemIrrlicht()
 vis.AttachSystem(sys)
-vis.SetWindowSize(1280,720)
+vis.SetWindowSize(500,500)
 vis.SetWindowTitle(filename)
 vis.Initialize()
 vis.AddSkyBox()
@@ -188,6 +211,7 @@ def terrain_to_png(terrain: veh.SCMDeformableTerrain) -> None:
     for v in vertices:
         csv.write(f"{v.x}, {v.y}, {v.z}\n")
     csv.close()
+    print("saved csv")
 
 
     # final = []
@@ -232,7 +256,7 @@ def export_mesh(terrain: veh.SCMDeformableTerrain):
 frames = 0
 
 while vis.Run():
-    if frames == 100:
+    if frames == frame_stop:
         terrain_to_png(terrain)
         # export_mesh(terrain)
         body.SetCollide(False)
