@@ -11,7 +11,7 @@ import math
 ### CHANGE THESE VALUES ###
 
 # name of file in /data/objs/
-filename = "11.obj"
+filename = "1.obj"
 
 # change this value until the mesh fits (after rotation)
 mesh_scale = 0.17
@@ -20,14 +20,14 @@ mesh_scale = 0.17
 mesh_rotation = math.pi
 
 # the frame at which to end (don't give it time to jiggle around)
-frame_stop = 105 # set this so it stops once the print solidly hits the terrain
+frame_stop = 110 # set this so it stops once the print solidly hits the terrain
 
 # the degrees to rotate over flipping the print
 # (for if you want it to not land in the middle of the print)
-flip_extra = 0*math.pi
+flip_extra = .1 * math.pi
 
 # offset the mesh (sometimes you just can't be bothered to edit it again, yk)
-offset = [0.02, 0, 0]
+offset = [ 0.01, 0, 0 ]
 
 # automatic mode: do an entire folder (as long as they don't have "-scan")
 automatic_mode = True
@@ -186,7 +186,7 @@ for filename in filenames:
     # Create the rigid body with contact mesh
     body = chrono.ChBody()
     sys.Add(body)
-    body.SetMass(50)
+    body.SetMass(100)
     body.SetPos(tire_center + chrono.ChVectorD(0, 0.2, 0))
 
     # Load mesh
@@ -241,9 +241,9 @@ for filename in filenames:
     terrain.SetSoilParameters(2e6,      # Bekker Kphi
                                 0,      # Bekker Kc
                                 1.1,    # Bekker n exponent
-                                0,      # Mohr cohesive limit (Pa)
-                                30,     # Mohr friction limit (degrees)
-                                0.01,   # Janosi shear coefficient (m)
+                                1,      # Mohr cohesive limit (Pa)
+                                5,      # Mohr friction limit (degrees)
+                                0.1,    # Janosi shear coefficient (m)
                                 2e9,    # Elastic stiffness (Pa/m), before plastic yield, must be > Kphi
                                 3e4     # Damping (Pa s/m), proportional to negative vertical speed (optional)
         )

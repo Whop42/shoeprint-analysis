@@ -51,34 +51,22 @@ if automatic_mode:
         if "scan" not in f and ".obj" in f and "empty" not in f:
             filepaths.append(os.path.join("data", "objs", f))
 
-for filepath in filepaths:
-    for flex_rads in flex_rads_automatic:
-        print(filepath.replace(".obj", "") + "-" + str(math.ceil(math.degrees(flex_rads))) + ".obj")
-        # remove cube
-        # bpy.ops.object.select_all(action='DESELECT')
-        # bpy.data.objects["Cube"].select_set(True)
+for filepath in filepaths: # every model
+    for flex_rads in flex_rads_automatic: # every angle
+        # delete anything left over
         bpy.ops.object.delete()
 
-        #import
+        # import .obj file
         bpy.ops.import_scene.obj(filepath=filepath)
 
-        print(bpy.data.objects)
-
-        # bpy.ops.object.select_all(action='SELECT')
-
         obj = bpy.context.selected_objects[0]
-        print(obj)
 
         # do flex
-
         flex_mod = obj.modifiers.new("flex", 'SIMPLE_DEFORM')
         flex_mod.deform_method = 'BEND'
         flex_mod.angle = -flex_rads
 
-        # do rotate
-        # obj.rotation_euler =   (-math.pi/4, # x rotation
-        #                         0,       # y rotation
-        #                         0)       # z rotation
-
         #export
-        bpy.ops.export_scene.obj(filepath=filepath.replace(".obj", "") + "-" + str(math.ceil(math.degrees(flex_rads))) + ".obj", use_materials=False)
+        bpy.ops.export_scene.obj(
+            filepath=filepath.replace(".obj", "") + "-" + str(math.ceil(math.degrees(flex_rads))) + ".obj",
+             use_materials=False)
