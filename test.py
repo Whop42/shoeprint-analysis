@@ -156,7 +156,7 @@ if automatic_mode:
             filenames.append(f)
 
 for filename in filenames:
-    print("starting " + filename)
+    print(">> starting " + filename)
     # filename = input(f"filename (in /{base_path}/objs/): ")
     file_path = os.path.join(base_path, "objs", filename)
 
@@ -257,7 +257,7 @@ for filename in filenames:
 
     vis = chronoirr.ChVisualSystemIrrlicht()
     vis.AttachSystem(sys)
-    vis.SetWindowSize(500,500)
+    vis.SetWindowSize(10,10)
     vis.SetWindowTitle(filename)
     vis.Initialize()
     vis.AddSkyBox()
